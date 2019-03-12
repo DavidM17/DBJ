@@ -1,0 +1,105 @@
+<html>
+<head>
+<h1>
+    Coordenadas
+</h1>
+</head>
+
+<body>
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAN_WVssJOIjh-e8hhpLu7DUanLFphDcrA&libraries=geometry"></script> -->
+
+
+<h3>latitud:</h3><p id="lat"></p>
+<h3>longitud:</h3><p id="lon"></p>
+<h3>Fecha:</h3><p id="tim"></p>
+
+<script type="text/javascript">
+   
+    // Function with time interval
+    setInterval(function()
+    {
+        $.getJSON("http://dbj.duckdns.org:3000/data", function(data){
+            //set the ids with the current data
+            document.getElementById("lat").innerHTML = data.latitud;
+            document.getElementById("lon").innerHTML = data.longitud;
+            document.getElementById("tim").innerHTML = data.fecha;
+        })
+    },10000);
+
+</script> 
+
+<style>
+    /* Always set the map height explicitly to define the size of the div
+        * element that contains the map. */
+    #map {
+        height: 50%;
+        width: 50%;
+    }
+    /* Optional: Makes the sample page fill the window. */
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    </style>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMsrTk-J2A8NWWR8nGjvbO9jnNxJ5Ocqo&callback=initMap"
+async defer></script>
+<div id="map"></div>
+
+    <script>
+
+        var map;
+        var marker;
+        var latitud;
+        var longitud;
+        $.getJSON("http://dbj.duckdns.org:3000/data", function(data){
+                    latitud= data.latitud;
+                    longitud= data.longitud;
+                    
+            })
+        // Function to render the map in the browser
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'),{
+            center: {lat: Number(latitud), lng: Number(longitud)},
+            zoom: 18
+            });
+
+            // Current position of the marker
+            marker = new google.maps.Marker({
+            position: {lat: Number(latitud), lng: Number(longitud)},
+            map: map
+            });
+        
+        }
+            
+        
+        setInterval(function()
+            {     
+                $.getJSON("http://dbj.duckdns.org:3000/data", function(data){
+                    latitud= data.latitud;
+                    longitud= data.longitud;
+                    
+                })
+
+                // Conditional to know if the marker is inside the map,
+                // if no then set the center of the map again, to keep the
+                // last marker(position) visible to the user               
+                if (map.getBounds().contains(marker.getPosition())==false){
+                    
+                    map.setCenter({lat: Number(latitud), lng: Number(longitud)});
+                    
+                }
+                marker.setPosition({lat: Number(latitud), lng: Number(longitud)});
+               
+            },10000);
+        
+       
+        
+    </script>
+
+
+</body>
+</html>
