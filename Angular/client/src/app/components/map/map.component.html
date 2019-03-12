@@ -1,0 +1,41 @@
+<body>
+<div class="init">
+<div class="wrapper">
+
+  <div class="logo">DBJ</div>
+  <div class="nav">
+        <ul>
+            <li><a routerLink="/">Home</a></li>
+            <li>Soporte</li>
+
+        </ul>
+  </div>
+</div>
+</div>
+
+<div *ngFor="let data of coord"> 
+<div class="coord_map" >
+    <h2>
+        Coordenadas
+      </h2>
+      
+      <h4>
+      Latitud: {{ data.latitud }}
+      </h4>
+      <h4>
+        Longitud: {{ data.longitud }}
+      </h4>
+      <h4>
+        Fecha: {{ data.fecha }}
+      </h4>
+      
+   
+
+</div>
+
+
+</div>
+<div #gmap style="width:100%;height:450px"></div>
+</body>
+
+
