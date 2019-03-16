@@ -15,6 +15,7 @@ export class MapComponent implements OnInit {
   @ViewChild('gmap') gmapElement: any;
   map: google.maps.Map;
   coord: any=[];
+  dates:any=[];
   marker:any;
   poly:any;
   lat:any;
@@ -90,8 +91,23 @@ export class MapComponent implements OnInit {
    }, 10000);
  }
 
+  between(){
+
+    this.dataservice.getDatas('2019-03-16 08:56:04','2019-03-16 08:58:43').subscribe(
+      res => {
+        this.dates=res;
+        console.log(this.dates);
+                  
+      },
+      
+      err => console.error(err)
+      
+    );
+  }
+
 
   ngOnInit() {
+    this.between();
     
     this.dataservice.getData().subscribe(
       res => {

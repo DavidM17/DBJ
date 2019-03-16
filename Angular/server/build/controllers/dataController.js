@@ -19,5 +19,13 @@ class dataController {
             res.json(data);
         });
     }
+    dates(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { date1 } = req.params;
+            const { date2 } = req.params;
+            const data = yield database_1.default.query("select * from *coord* where *fecha* between 'date1' and 'date2'");
+            res.json(data);
+        });
+    }
 }
 exports.datacontroller = new dataController();

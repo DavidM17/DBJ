@@ -7,12 +7,18 @@ import { HttpClient} from '@angular/common/http'
 })
 export class DataService {
 
-  API_URI= 'http://ec2-54-196-78-241.compute-1.amazonaws.com:3000';
+  API_URI= 'localhost:3000';
   
   constructor(private http: HttpClient) { }
 
   getData(){
 
     return this.http.get(`${this.API_URI}/data`);
+  }
+
+  getDatas(date1:string,date2:string){
+
+    return this.http.get(`${this.API_URI}/data/${date1}/${date2}`);
+
   }
 }
