@@ -7,7 +7,6 @@ const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan")); // for Http request
 const cors_1 = __importDefault(require("cors")); // Let us work with different ports at the same time
 const indexRoutes_1 = __importDefault(require("./routes/indexRoutes"));
-var db = require('./routes/indexRoutes');
 class Server {
     // In NodeJs the constructor always run in a class 
     constructor() {

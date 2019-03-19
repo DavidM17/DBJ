@@ -21,9 +21,12 @@ class dataController {
     }
     dates(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { date1 } = req.params;
-            const { date2 } = req.params;
-            const data = yield database_1.default.query("select * from *coord* where *fecha* between 'date1' and 'date2'");
+            const date1 = req.params.date1;
+            const hour1 = req.params.hour1;
+            const date2 = req.params.date2;
+            const hour2 = req.params.hour2;
+            const type = "SELECT * FROM coord WHERE fecha >= '" + date1 + " " + hour1 + "' AND fecha <= '" + date2 + " " + hour2 + "'";
+            const data = yield database_1.default.query(type);
             res.json(data);
         });
     }

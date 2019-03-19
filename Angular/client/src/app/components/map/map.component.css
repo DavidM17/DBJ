@@ -1,5 +1,6 @@
 body {
-    background: url(../../../images/img4.jpg) no-repeat 50% 50%;
+    /* background: url(../../../images/img4.jpg) no-repeat 50% 50%; */
+    background: #fff;
     background-size: cover;
 }
 .logo {
@@ -39,5 +40,21 @@ body {
 }
 
 .coord_map{
-padding-top: 60px;
+padding-top: 10px;
+}
+
+.row{
+    margin-left: 5px;
+}
+
+.button-style{
+    padding: 5px;
+}
+
+.history{
+    margin-left: 10px;
+}
+
+.date{
+    margin-left: 30px;
 }

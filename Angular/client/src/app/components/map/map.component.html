@@ -1,5 +1,6 @@
 <body>
 <div class="init">
+  
 <div class="wrapper">
 
   <div class="logo">DBJ</div>
@@ -29,12 +30,59 @@
         Fecha: {{ data.fecha }}
       </h4>
       
-   
+      
+      
+</div>
 
 </div>
 
+<div class="row">
+    <div class="button-style">
+      <button class="btn btn-info" (click)="show=false; data(); live=true">Live</button>
+    </div>
+  
+    <div class="button-style">
+        <button class="btn btn-info" (click)="show=true">Historicos</button>
+    </div>
+  
+  </div>
 
+<div class="history" *ngIf="show">
+
+  <div class="row">
+    <div class="date">
+      <p>
+        Fecha de Inicio
+      </p>
+    
+      <ngb-datepicker #dp [(ngModel)]="model1" (navigate)="date1 = $event.next"></ngb-datepicker>
+      
+      <p>
+          Hora Inicial
+      </p>
+      <ngb-timepicker [(ngModel)]="time1" [seconds]="true"></ngb-timepicker>
+    </div>
+
+    <div class="date">
+        <p>
+          Fecha Final
+        </p>
+      
+        <ngb-datepicker #dp [(ngModel)]="model2" (navigate)="date2 = $event.next"></ngb-datepicker>
+        <p>
+            Hora Final
+        </p>
+        <ngb-timepicker [(ngModel)]="time2" [seconds]="true"></ngb-timepicker>
+      </div>
+
+      
+  </div>
+  <hr/>    
+      <button class="btn btn-sm btn-outline-primary mr-2" (click)="between();live=false">Buscar</button>
+  
+  <hr/>
 </div>
+
 <div #gmap style="width:100%;height:450px"></div>
 </body>
 

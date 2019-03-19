@@ -5,7 +5,6 @@ import morgan from 'morgan';// for Http request
 import cors from 'cors'; // Let us work with different ports at the same time
 import indexroutes  from './routes/indexRoutes';
 
-var db = require('./routes/indexRoutes');
 
 
 

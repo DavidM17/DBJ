@@ -9,7 +9,8 @@ import { MapComponent } from './components/map/map.component';
 import { HttpClientModule } from '@angular/common/http';
 import { DataService} from './services/data.service';
 import { HomeComponent } from './home/home.component';
-
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,9 @@ import { HomeComponent } from './home/home.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    NgbModule,
+    FormsModule
   ],
   providers: [
     DataService

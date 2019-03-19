@@ -95,6 +95,7 @@ class indexRoutes {
     }
     config() {
         this.router.get('/data', dataController_1.datacontroller.list); // Route for the requests
+        this.router.get('/data/time/:date1/:hour1/:date2/:hour2', dataController_1.datacontroller.dates); // Route for the requests
     }
 }
 const indexroutes = new indexRoutes();

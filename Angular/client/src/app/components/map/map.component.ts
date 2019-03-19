@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { DataService} from '../../services/data.service';
 import { ViewChild } from '@angular/core';
+import {NgbDateStruct,NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
 
 
 declare var google: any;
@@ -14,6 +15,9 @@ declare var google: any;
 export class MapComponent implements OnInit {
   @ViewChild('gmap') gmapElement: any;
   map: google.maps.Map;
+  show=false;
+  live=true;
+  change=false;
   coord: any=[];
   dates:any=[];
   marker:any;
@@ -21,11 +25,21 @@ export class MapComponent implements OnInit {
   lat:any;
   lon:any;
   flightPlan:any=[];
+
+  model1: NgbDateStruct;
+  model2: NgbDateStruct;
+  date1: {year: number, month: number, day: number};
+  date2: {year: number, month: number, day: number};
+
+  time1: NgbTimeStruct = {hour: 0, minute: 0, second: 0};
+  time2: NgbTimeStruct = {hour: 0, minute: 0, second: 0};
+ 
+
   private _setIntervalHandler:any;
   
   constructor(private dataservice: DataService) { 
    
-    this.data();
+
     
   }
 
@@ -55,10 +69,18 @@ export class MapComponent implements OnInit {
 
   data(){
     this._setIntervalHandler = setInterval(() => { 
+
+      if (this.live){
+
+     
       this.dataservice.getData().subscribe(
         res => {
           
-
+          if(this.change){
+            this.poly.setMap(null);
+            this.flightPlan=[];
+          }
+      
           this.coord=res;
           this.lat=parseFloat(this.coord.find(t=>t.id).latitud);
           this.lon=parseFloat(this.coord.find(t=>t.id).longitud);
@@ -81,6 +103,8 @@ export class MapComponent implements OnInit {
             strokeWeight: 3
           });
           this.poly.setMap(this.map);
+          this.change=false;
+          
                   
         },
         
@@ -88,26 +112,57 @@ export class MapComponent implements OnInit {
         
       );
     
+    }
    }, 10000);
  }
 
-  between(){
+  pad2(number) {
+   
+    return (number < 10 ? '0' : '') + number
 
-    this.dataservice.getDatas('2019-03-16 08:56:04','2019-03-16 08:58:43').subscribe(
+  }
+  between(){
+    this.show=false;
+    this.poly.setMap(null);
+    this.flightPlan=[];
+    
+
+    this.dataservice.getDatas(this.model1.year.toString()+'-'+this.pad2(this.model1.month).toString()+'-'+this.pad2(this.model1.day).toString(),
+    this.pad2(this.time1.hour).toString()+':'+this.pad2(this.time1.minute).toString()+':'+this.pad2(this.time1.second).toString(),
+    this.model2.year.toString()+'-'+this.pad2(this.model2.month).toString()+'-'+this.pad2(this.model2.day).toString(),
+    this.pad2(this.time2.hour).toString()+':'+this.pad2(this.time2.minute).toString()+':'+this.pad2(this.time2.second).toString()).subscribe(
       res => {
         this.dates=res;
-        console.log(this.dates);
+       
+        for (var list in this.dates) {
+          var latLng={lat: Number(this.dates[list].latitud), lng: Number(this.dates[list].longitud)}
+          this.flightPlan.push(latLng);
+          
+        }
+        console.log(this.flightPlan);
+
+        this.poly = new google.maps.Polyline({
+          path: this.flightPlan,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 3
+        });
+       
+        this.poly.setMap(this.map);
+        
+        this.change=true;
                   
       },
       
       err => console.error(err)
       
     );
+    
   }
 
 
   ngOnInit() {
-    this.between();
+    
     
     this.dataservice.getData().subscribe(
       res => {
@@ -118,7 +173,7 @@ export class MapComponent implements OnInit {
         
         this.map.setCenter({lat: Number(this.lat), lng: Number(this.lon)});
         this.marker.setPosition({lat: Number(this.lat), lng: Number(this.lon)});
-        console.log(this.lat);
+    
                    
       },
       
@@ -126,5 +181,7 @@ export class MapComponent implements OnInit {
       
     );
     this.initMap();
+    this.data();
+  
   }
 }
