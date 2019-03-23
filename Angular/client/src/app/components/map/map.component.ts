@@ -21,6 +21,7 @@ export class MapComponent implements OnInit {
   coord: any=[];
   dates:any=[];
   marker:any;
+  marker2:any= [];
   poly:any;
   lat:any;
   lon:any;
@@ -67,6 +68,17 @@ export class MapComponent implements OnInit {
     this.poly.setMap(this.map);
   }
 
+
+  clearMarkers() {
+
+    for(var i in this.marker2){
+      this.marker2[i].setMap(null);
+      
+    }
+    this.marker2=[];
+    
+  }
+
   data(){
     this._setIntervalHandler = setInterval(() => { 
 
@@ -77,32 +89,40 @@ export class MapComponent implements OnInit {
         res => {
           
           if(this.change){
-            this.poly.setMap(null);
+           
+            
             this.flightPlan=[];
+            this.clearMarkers();
+            this.marker=[];
+
+            //Marker
+
+            this.marker = new google.maps.Marker({
+              position: {lat: Number(this.lat), lng: Number(this.lat)},
+              map: this.map
+              });
+            
           }
       
           this.coord=res;
           this.lat=parseFloat(this.coord.find(t=>t.id).latitud);
           this.lon=parseFloat(this.coord.find(t=>t.id).longitud);
           
+          //Update marker
           this.marker.setPosition({lat: Number(this.lat), lng: Number(this.lon)});
           
+
           if (this.map.getBounds().contains(this.marker.getPosition())==false){
             this.map.setCenter({lat: Number(this.lat), lng: Number(this.lon)});
           }
          
           //Polyline
-          //var path = this.poly.getPath();
+         
           var latLng={lat: Number(this.lat), lng: Number(this.lon)}
           this.flightPlan.push(latLng);
-          console.log(this.flightPlan);
-          this.poly = new google.maps.Polyline({
-            path: this.flightPlan,
-            strokeColor: '#000000',
-            strokeOpacity: 1.0,
-            strokeWeight: 3
-          });
-          this.poly.setMap(this.map);
+         
+          this.poly.setPath(this.flightPlan);
+          
           this.change=false;
           
                   
@@ -122,9 +142,11 @@ export class MapComponent implements OnInit {
 
   }
   between(){
+    this.clearMarkers();
+    //Remove live marker
+    this.marker.setMap(null);
+    //this.marker=[];
     this.show=false;
-    this.poly.setMap(null);
-    this.flightPlan=[];
     
 
     this.dataservice.getDatas(this.model1.year.toString()+'-'+this.pad2(this.model1.month).toString()+'-'+this.pad2(this.model1.day).toString(),
@@ -133,22 +155,26 @@ export class MapComponent implements OnInit {
     this.pad2(this.time2.hour).toString()+':'+this.pad2(this.time2.minute).toString()+':'+this.pad2(this.time2.second).toString()).subscribe(
       res => {
         this.dates=res;
-       
+        this.flightPlan=[];
+        var latLng;
         for (var list in this.dates) {
-          var latLng={lat: Number(this.dates[list].latitud), lng: Number(this.dates[list].longitud)}
+          //Flightplan Array
+          latLng={lat: Number(this.dates[list].latitud), lng: Number(this.dates[list].longitud)}
           this.flightPlan.push(latLng);
-          
-        }
-        console.log(this.flightPlan);
 
-        this.poly = new google.maps.Polyline({
-          path: this.flightPlan,
-          strokeColor: '#000000',
-          strokeOpacity: 1.0,
-          strokeWeight: 3
-        });
-       
-        this.poly.setMap(this.map);
+          //Markers Array
+            this.marker2[list] = new google.maps.Marker({
+            position: latLng,
+            title:'Fecha: '+this.dates[list].fecha,
+            icon:'https://cdn4.iconfinder.com/data/icons/momenticons-basic/32x32/bullet-blue.png',
+            map: this.map
+            });
+
+        }
+        
+        this.poly.setPath(this.flightPlan);
+        this.map.setCenter(latLng);
+        this.map.setZoom(15);
         
         this.change=true;
                   
