@@ -132,7 +132,7 @@ class indexRoutes {
     
     config(): void{
         this.router.get('/data',datacontroller.list); // Route for the requests
-        this.router.get('/data/time/:date1/:hour1/:date2/:hour2',datacontroller.dates); // Route for the requests
+        this.router.post('/data/time',datacontroller.dates); // Route for the requests
         
     }
 

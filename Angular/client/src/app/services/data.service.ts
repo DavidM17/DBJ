@@ -7,7 +7,7 @@ import { HttpClient} from '@angular/common/http'
 })
 export class DataService {
 
-  API_URI= 'http://ec2-35-174-168-96.compute-1.amazonaws.com:3000';
+  API_URI= 'http://ec2-52-73-20-209.compute-1.amazonaws.com:3000';
   
   constructor(private http: HttpClient) { }
 
@@ -18,7 +18,8 @@ export class DataService {
 
   getDatas(date1:string,hour1:string,date2:string,hour2:string){
 
-    return this.http.get(`${this.API_URI}/data/time/${date1}/${hour1}/${date2}/${hour2}`);
+    return this.http.post(`${this.API_URI}/data/time/`,{date1,hour1,date2,hour2});
 
   }
 }
+
