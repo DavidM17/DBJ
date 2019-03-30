@@ -1,6 +1,13 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: Poppins !important;
+}
 body {
     /* background: url(../../../images/img4.jpg) no-repeat 50% 50%; */
-    background: #fff;
+    background: #fff; 
     background-size: cover;
 }
 .logo {
@@ -45,6 +52,7 @@ padding-top: 10px;
 
 .row{
     margin-left: 5px;
+    margin-right: 10px;
 }
 
 .button-style{
@@ -57,4 +65,10 @@ padding-top: 10px;
 
 .date{
     margin-left: 30px;
+}
+
+.Slider{
+    padding-top: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
 }

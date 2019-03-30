@@ -27,7 +27,7 @@ serverdb.on("message", function (msg : any) {
         console.log(coord);
     
         dt=coord.slice(6,10);
-        
+       
         lat=coord.slice(16,19)+"."+coord.slice(19,24);
 
         lon=coord.slice(24,28)+"."+coord.slice(28,33);
@@ -47,23 +47,30 @@ serverdb.on("message", function (msg : any) {
         
         //Year
 
-        now.setDate(now.getDate()+(dt*7))
-        now.setSeconds(now.getSeconds()+h)
+        now.setDate(now.getDate()+(dt*7));
+        now.setSeconds(now.getSeconds()+h);
+        console.log(now);
 
         //Last day of the current week
         var lastday = new Date(now.setDate(now.getDate() - now.getDay()+6));
         var ld :number = lastday.getDate();
         n=parseInt(n,10);
-      
+        
 
         // The last day of the week change if its over wednesday 12:00
         // To the lastweek day variable remove 7 days
-        if (n>=3 && h>43200){//43200
-            ld=ld-7;    
+        if (key == "DBJ12345"){
+            if (n>=3 && h>43200){//43200
+                ld=ld-7;    
+            }
+    
+            if (n>=4){
+                ld=ld-7;    
+            }
         }
-
-        if (n>=4){
-            ld=ld-7;    
+        
+        if (key == "DBJ12346"){
+            ld=ld-7;
         }
         
         // If its less than 5:00 to the reference hour then keep day as the 

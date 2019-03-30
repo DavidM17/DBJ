@@ -11,6 +11,7 @@ import { DataService} from './services/data.service';
 import { HomeComponent } from './home/home.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule} from '@angular/forms';
+import { Ng5SliderModule } from 'ng5-slider';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import {FormsModule} from '@angular/forms';
     AppRoutingModule,
     HttpClientModule,
     NgbModule,
-    FormsModule
+    FormsModule,
+    Ng5SliderModule
   ],
   providers: [
     DataService

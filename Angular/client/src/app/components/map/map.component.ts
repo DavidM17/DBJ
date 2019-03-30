@@ -1,9 +1,11 @@
 /// <reference types="@types/googlemaps" />
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, DoCheck } from '@angular/core';
 
 import { DataService} from '../../services/data.service';
 import { ViewChild } from '@angular/core';
 import {NgbDateStruct,NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
+
+import { Options } from 'ng5-slider';
 
 
 declare var google: any;
@@ -12,7 +14,7 @@ declare var google: any;
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit,DoCheck {
   @ViewChild('gmap') gmapElement: any;
   map: google.maps.Map;
   show=false;
@@ -21,11 +23,16 @@ export class MapComponent implements OnInit {
   coord: any=[];
   dates:any=[];
   marker:any;
-  marker2:any= [];
+  marker2:any;
   poly:any;
   lat:any;
   lon:any;
   flightPlan:any=[];
+
+  buscar=false;
+  warning=false;
+  slider=0;
+  markerstatus=false;
 
   model1: NgbDateStruct;
   model2: NgbDateStruct;
@@ -33,15 +40,38 @@ export class MapComponent implements OnInit {
   date2: {year: number, month: number, day: number};
 
   time1: NgbTimeStruct = {hour: 0, minute: 0, second: 0};
-  time2: NgbTimeStruct = {hour: 0, minute: 0, second: 0};
- 
+  time2: NgbTimeStruct = {hour: 23, minute: 59, second: 0};
+  
+  value: number = 0;
+  options: Options ; 
 
+ 
   private _setIntervalHandler:any;
   
   constructor(private dataservice: DataService) { 
    
 
     
+  }
+
+  ngDoCheck(){
+
+    if (this.live == false){
+      if (this.markerstatus== true){
+      this.marker2.setPosition({lat: Number(this.dates[this.value].latitud), lng: Number(this.dates[this.value].longitud)});
+      this.coord=[{
+        latitud:this.dates[this.value].latitud,
+        longitud:this.dates[this.value].longitud,
+        fecha:this.dates[this.value].fecha
+      }];
+    
+      if (this.map.getBounds().contains(this.marker2.getPosition())==false){
+        this.map.setCenter({lat: Number(this.dates[this.value].latitud), lng: Number(this.dates[this.value].longitud)});
+      }
+    
+    }
+  }
+  
   }
 
  
@@ -56,8 +86,16 @@ export class MapComponent implements OnInit {
 
     this.marker = new google.maps.Marker({
     position: {lat: Number(this.lat), lng: Number(this.lat)},
+    icon:'https://cdn2.iconfinder.com/data/icons/Snow/Snow/snow/Car.png',
     map: this.map
     });
+
+
+    this.marker2 = new google.maps.Marker({
+      position: {lat: Number(this.lat), lng: Number(this.lat)},
+      map: null
+      });
+
 
     this.poly = new google.maps.Polyline({
       path: this.flightPlan,
@@ -70,12 +108,8 @@ export class MapComponent implements OnInit {
 
 
   clearMarkers() {
-
-    for(var i in this.marker2){
-      this.marker2[i].setMap(null);
-      
-    }
-    this.marker2=[];
+    this.marker2.setMap(null);
+    
     
   }
 
@@ -83,8 +117,9 @@ export class MapComponent implements OnInit {
     this._setIntervalHandler = setInterval(() => { 
 
       if (this.live){
+        this.markerstatus=false;
 
-     
+
       this.dataservice.getData().subscribe(
         res => {
           
@@ -99,6 +134,7 @@ export class MapComponent implements OnInit {
 
             this.marker = new google.maps.Marker({
               position: {lat: Number(this.lat), lng: Number(this.lat)},
+              icon:'https://cdn2.iconfinder.com/data/icons/Snow/Snow/snow/Car.png',
               map: this.map
               });
             
@@ -142,47 +178,74 @@ export class MapComponent implements OnInit {
 
   }
   between(){
-    this.clearMarkers();
-    //Remove live marker
-    this.marker.setMap(null);
-    //this.marker=[];
-    this.show=false;
-    
+    this.value=0;
 
-    this.dataservice.getDatas(this.model1.year.toString()+'-'+this.pad2(this.model1.month).toString()+'-'+this.pad2(this.model1.day).toString(),
-    this.pad2(this.time1.hour).toString()+':'+this.pad2(this.time1.minute).toString()+':'+this.pad2(this.time1.second).toString(),
-    this.model2.year.toString()+'-'+this.pad2(this.model2.month).toString()+'-'+this.pad2(this.model2.day).toString(),
-    this.pad2(this.time2.hour).toString()+':'+this.pad2(this.time2.minute).toString()+':'+this.pad2(this.time2.second).toString()).subscribe(
-      res => {
-        this.dates=res;
-        this.flightPlan=[];
-        var latLng;
-        for (var list in this.dates) {
-          //Flightplan Array
-          latLng={lat: Number(this.dates[list].latitud), lng: Number(this.dates[list].longitud)}
-          this.flightPlan.push(latLng);
+    if (this.buscar == true){
+     
+      if (this.model2.year>=this.model1.year && this.model2.month>=this.model1.month && this.model2.day>=this.model1.day){
+          this.buscar=false; 
 
-          //Markers Array
-            this.marker2[list] = new google.maps.Marker({
-            position: latLng,
-            title:'Fecha: '+this.dates[list].fecha,
-            icon:'https://cdn4.iconfinder.com/data/icons/momenticons-basic/32x32/bullet-blue.png',
-            map: this.map
-            });
 
-        }
+          this.clearMarkers();
+          //this.marker2=[];
+          //Remove live marker
+          this.marker.setMap(null);
+          //this.marker=[];
+          this.show=false;
+          
+
+          this.dataservice.getDatas(this.model1.year.toString()+'-'+this.pad2(this.model1.month).toString()+'-'+this.pad2(this.model1.day).toString(),
+          this.pad2(this.time1.hour).toString()+':'+this.pad2(this.time1.minute).toString()+':'+this.pad2(this.time1.second).toString(),
+          this.model2.year.toString()+'-'+this.pad2(this.model2.month).toString()+'-'+this.pad2(this.model2.day).toString(),
+          this.pad2(this.time2.hour).toString()+':'+this.pad2(this.time2.minute).toString()+':'+this.pad2(this.time2.second).toString()).subscribe(
+            res => {
+              this.dates=res;
+              console.log(res);
+              this.slider=this.dates.length;
+              this.options={
+                floor: 1,
+                ceil: this.slider-1
+          
+              };
+              this.flightPlan=[];
+              var latLng;
+              for (var list in this.dates) {
+                //Flightplan Array
+                latLng={lat: Number(this.dates[list].latitud), lng: Number(this.dates[list].longitud)}
+                this.flightPlan.push(latLng);
+              }
+
         
-        this.poly.setPath(this.flightPlan);
-        this.map.setCenter(latLng);
-        this.map.setZoom(15);
-        
-        this.change=true;
-                  
-      },
+              //Markers Array
+              this.marker2 = new google.maps.Marker({
+                position: {lat: Number(this.lat), lng: Number(this.lat)},
+                icon:'https://cdn2.iconfinder.com/data/icons/Snow/Snow/snow/Car.png',
+                map: this.map
+                });
+              this.markerstatus=true;
+              
+              this.poly.setPath(this.flightPlan);
+              this.map.setCenter(latLng);
+              this.map.setZoom(15);
+              
+              this.change=true;
+              this.buscar=false;
+                        
+            },
+            
+            err => console.error(err)
+            
+          );
+
+
+       
+        this.warning=false;
+      }
+      else{
+        this.warning=true;
+      }
       
-      err => console.error(err)
-      
-    );
+    }
     
   }
 

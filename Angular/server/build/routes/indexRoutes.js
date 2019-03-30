@@ -35,16 +35,22 @@ serverdb.on("message", function (msg) {
         //Year
         now.setDate(now.getDate() + (dt * 7));
         now.setSeconds(now.getSeconds() + h);
+        console.log(now);
         //Last day of the current week
         var lastday = new Date(now.setDate(now.getDate() - now.getDay() + 6));
         var ld = lastday.getDate();
         n = parseInt(n, 10);
         // The last day of the week change if its over wednesday 12:00
         // To the lastweek day variable remove 7 days
-        if (n >= 3 && h > 43200) { //43200
-            ld = ld - 7;
+        if (key == "DBJ12345") {
+            if (n >= 3 && h > 43200) { //43200
+                ld = ld - 7;
+            }
+            if (n >= 4) {
+                ld = ld - 7;
+            }
         }
-        if (n >= 4) {
+        if (key == "DBJ12346") {
             ld = ld - 7;
         }
         // If its less than 5:00 to the reference hour then keep day as the 
@@ -95,7 +101,7 @@ class indexRoutes {
     }
     config() {
         this.router.get('/data', dataController_1.datacontroller.list); // Route for the requests
-        this.router.get('/data/time/:date1/:hour1/:date2/:hour2', dataController_1.datacontroller.dates); // Route for the requests
+        this.router.post('/data/time', dataController_1.datacontroller.dates); // Route for the requests
     }
 }
 const indexroutes = new indexRoutes();
