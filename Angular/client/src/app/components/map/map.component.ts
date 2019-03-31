@@ -35,6 +35,7 @@ export class MapComponent implements OnInit,DoCheck {
   markerstatus=false;
   noexist=false;
   sliderdiv=false;
+  hist:any=[];
 
   model1: NgbDateStruct;
   model2: NgbDateStruct;
@@ -203,8 +204,8 @@ export class MapComponent implements OnInit,DoCheck {
           this.pad2(this.time2.hour).toString()+':'+this.pad2(this.time2.minute).toString()+':'+this.pad2(this.time2.second).toString()).subscribe(
             res => {
                 
-               
-                if (res.length == 0){
+                this.hist=res;
+                if (this.hist.length == 0){
                   this.dates=[{latitud:"11.01807",
                   longitud:"-74.85167",
                   fecha:""}];
