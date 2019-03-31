@@ -33,6 +33,8 @@ export class MapComponent implements OnInit,DoCheck {
   warning=false;
   slider=0;
   markerstatus=false;
+  noexist=false;
+  sliderdiv=false;
 
   model1: NgbDateStruct;
   model2: NgbDateStruct;
@@ -57,7 +59,7 @@ export class MapComponent implements OnInit,DoCheck {
   ngDoCheck(){
 
     if (this.live == false){
-      if (this.markerstatus== true){
+      if (this.markerstatus == true){
       this.marker2.setPosition({lat: Number(this.dates[this.value].latitud), lng: Number(this.dates[this.value].longitud)});
       this.coord=[{
         latitud:this.dates[this.value].latitud,
@@ -124,8 +126,9 @@ export class MapComponent implements OnInit,DoCheck {
         res => {
           
           if(this.change){
-           
-            
+
+            this.sliderdiv=false;
+            this.noexist=false;
             this.flightPlan=[];
             this.clearMarkers();
             this.marker=[];
@@ -187,7 +190,7 @@ export class MapComponent implements OnInit,DoCheck {
 
 
           this.clearMarkers();
-          //this.marker2=[];
+          
           //Remove live marker
           this.marker.setMap(null);
           //this.marker=[];
@@ -199,37 +202,54 @@ export class MapComponent implements OnInit,DoCheck {
           this.model2.year.toString()+'-'+this.pad2(this.model2.month).toString()+'-'+this.pad2(this.model2.day).toString(),
           this.pad2(this.time2.hour).toString()+':'+this.pad2(this.time2.minute).toString()+':'+this.pad2(this.time2.second).toString()).subscribe(
             res => {
-              this.dates=res;
-              console.log(res);
-              this.slider=this.dates.length;
-              this.options={
-                floor: 1,
-                ceil: this.slider-1
-          
-              };
-              this.flightPlan=[];
-              var latLng;
-              for (var list in this.dates) {
-                //Flightplan Array
-                latLng={lat: Number(this.dates[list].latitud), lng: Number(this.dates[list].longitud)}
-                this.flightPlan.push(latLng);
-              }
+                
+               
+                if (res.length == 0){
+                  this.dates=[{latitud:"11.01807",
+                  longitud:"-74.85167",
+                  fecha:""}];
+                  this.noexist=true;
+                  this.sliderdiv=false;
+                }
+                else{
+                  this.noexist=false;
+                  this.dates=res;
+                  this.sliderdiv=true;
+                  
+                }
+                
+                this.slider=this.dates.length-1;
+                this.options={
+                  floor: 0,
+                  ceil: this.slider
+            
+                };
+                this.flightPlan=[];
+                var latLng;
+                for (var list in this.dates) {
+                  //Flightplan Array
+                  latLng={lat: Number(this.dates[list].latitud), lng: Number(this.dates[list].longitud)}
+                  this.flightPlan.push(latLng);
+                }
 
-        
-              //Markers Array
-              this.marker2 = new google.maps.Marker({
-                position: {lat: Number(this.lat), lng: Number(this.lat)},
-                icon:'https://cdn2.iconfinder.com/data/icons/Snow/Snow/snow/Car.png',
-                map: this.map
-                });
-              this.markerstatus=true;
+          
+                //Markers Array
+                this.marker2 = new google.maps.Marker({
+                  position: latLng,
+                  icon:'https://cdn2.iconfinder.com/data/icons/Snow/Snow/snow/Car.png',
+                  map: this.map
+                  });
+                this.markerstatus=true;
+                
+                this.poly.setPath(this.flightPlan);
+                this.map.setCenter(latLng);
+                this.map.setZoom(15);
+                
+                
+                this.change=true;
+                this.buscar=false;
+
               
-              this.poly.setPath(this.flightPlan);
-              this.map.setCenter(latLng);
-              this.map.setZoom(15);
-              
-              this.change=true;
-              this.buscar=false;
                         
             },
             
