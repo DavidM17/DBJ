@@ -14,12 +14,15 @@ var lon :any;
 var dt :any;
 var h :any;
 
+var vel:any;
+var rev:any;
+
 // Just get data is there is new message
 serverdb.on("message", function (msg : any) {
 
     coord = msg.toString('utf8');
     
-    var key=coord.slice(46,54);
+    var key=coord.slice(53,60);
 
     if (key=="DBJ12345" || key=="DBJ12346" ){
 
@@ -33,6 +36,9 @@ serverdb.on("message", function (msg : any) {
         lon=coord.slice(24,28)+"."+coord.slice(28,33);
         
         h=coord.slice(11,16);
+
+        vel=coord.slice(41,42)+"."+coord.slice(43,44);
+        rev=coord.slice(45,48);
         
         // Days
         var n = coord[10];
@@ -104,7 +110,9 @@ serverdb.on("message", function (msg : any) {
         coord = {
             latitud: lat,
             longitud: lon,
-            fecha: x
+            fecha: x,
+            velocidad: vel,
+            rpm:rev
         }
         console.log(coord);
         pool.query('INSERT INTO coord set ?',coord);

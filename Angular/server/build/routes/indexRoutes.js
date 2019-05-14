@@ -14,16 +14,20 @@ var lat;
 var lon;
 var dt;
 var h;
+var vel;
+var rev;
 // Just get data is there is new message
 serverdb.on("message", function (msg) {
     coord = msg.toString('utf8');
-    var key = coord.slice(46, 54);
+    var key = coord.slice(53, 60);
     if (key == "DBJ12345" || key == "DBJ12346") {
         console.log(coord);
         dt = coord.slice(6, 10);
         lat = coord.slice(16, 19) + "." + coord.slice(19, 24);
         lon = coord.slice(24, 28) + "." + coord.slice(28, 33);
         h = coord.slice(11, 16);
+        vel = coord.slice(41, 42) + "." + coord.slice(43, 44);
+        rev = coord.slice(45, 48);
         // Days
         var n = coord[10];
         if (key == "DBJ12346") {
@@ -80,7 +84,9 @@ serverdb.on("message", function (msg) {
         coord = {
             latitud: lat,
             longitud: lon,
-            fecha: x
+            fecha: x,
+            velocidad: vel,
+            rpm: rev
         };
         console.log(coord);
         database_1.default.query('INSERT INTO coord set ?', coord);

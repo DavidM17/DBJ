@@ -16,7 +16,9 @@ class dataController {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const data = yield database_1.default.query('SELECT * FROM coord ORDER BY id DESC LIMIT 1');
-            res.json(data);
+            const data2 = yield database_1.default.query('SELECT * FROM coord2 ORDER BY id DESC LIMIT 1');
+            const datar = { carro1: data, carro2: data2 };
+            res.json(datar);
         });
     }
     dates(req, res) {
@@ -26,8 +28,10 @@ class dataController {
             const date2 = req.body.date2;
             const hour2 = req.body.hour2;
             const type = "SELECT * FROM coord WHERE fecha >= '" + date1 + " " + hour1 + "' AND fecha <= '" + date2 + " " + hour2 + "'";
-            const data = yield database_1.default.query(type);
-            res.json(data);
+            const type2 = "SELECT * FROM coord2 WHERE fecha >= '" + date1 + " " + hour1 + "' AND fecha <= '" + date2 + " " + hour2 + "'";
+            const data1 = yield database_1.default.query(type);
+            const data2 = yield database_1.default.query(type2);
+            res.json({ carro1: data1, carro2: data2 });
         });
     }
 }

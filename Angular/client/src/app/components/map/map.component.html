@@ -1,4 +1,5 @@
 <body>
+
 <div class="init">
   
 <div class="wrapper">
@@ -7,16 +8,15 @@
   <div class="nav">
         <ul>
             <li><a routerLink="/">Home</a></li>
-            <li>Soporte</li>
+            
 
         </ul>
   </div>
 </div>
 </div>
 
-
 <div class="row">
-  <div *ngFor="let data of coord"> 
+  <div *ngFor="let data of coord.carro1"> 
     <div class="coord_map" >
         <h3>
             Coordenadas
@@ -37,10 +37,47 @@
                     Fecha: {{ data.fecha }}
                   </h5>
             </div>
+            <div class="vl"></div>
+            
+            <div class="date" *ngFor="let data of coord.carro2">
+              <h5>
+              Latitud: {{ data.latitud }}
+              </h5>
+            </div>
+           <div class="date" *ngFor="let data of coord.carro2">
+              <h5>
+                Longitud: {{ data.longitud }}
+              </h5>
+           </div>
+            <div class="date" *ngFor="let data of coord.carro2">
+              <h5>
+                Fecha: {{ data.fecha }}
+              </h5>
+            </div>
+          
+           
           </div>
+
+          <ngx-gauge [type]="gaugeType" 
+          [size]="100"
+          [value]="gaugeValue" 
+          [label]="gaugeLabel"  
+          [append]="gaugeAppendText"
+          [animate]="false"
+          [max]="200">
           
-          
-          
+         </ngx-gauge>
+
+          <ngx-gauge [type]="gaugeType2" 
+          [size]="100"
+          [value]="gaugeValue2" 
+          [label]="gaugeLabel2"  
+          [append]="gaugeAppendText2"
+          [animate]="false"
+          [max]="2500">
+          </ngx-gauge>
+
+       
           
     </div>
     
@@ -48,9 +85,14 @@
   
 </div>
 <div class=Slider *ngIf="sliderdiv"> 
+    <div class="row">
       
-    <ng5-slider [(value)]="value" [options]="options"></ng5-slider>
-   
+        <ng5-slider [(value)]="value" [options]="options"></ng5-slider>
+      
+      
+        <ng5-slider [(value)]="value2" [options]="options2"></ng5-slider>
+      
+    </div>
    </div>
 
 <div class="row">
@@ -106,7 +148,8 @@
   </ngb-alert>
 </div>
 
-<div #gmap style="width:100%;height:100%"></div>
+<div #gmap style="width:100%;height:65%"></div>
+
 </body>
 
 

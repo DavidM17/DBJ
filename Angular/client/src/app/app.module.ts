@@ -12,6 +12,8 @@ import { HomeComponent } from './home/home.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule} from '@angular/forms';
 import { Ng5SliderModule } from 'ng5-slider';
+import { NgxGaugeModule } from 'ngx-gauge';
+
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import { Ng5SliderModule } from 'ng5-slider';
     HttpClientModule,
     NgbModule,
     FormsModule,
-    Ng5SliderModule
+    Ng5SliderModule,
+    NgxGaugeModule
+    
   ],
   providers: [
     DataService
