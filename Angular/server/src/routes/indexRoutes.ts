@@ -16,15 +16,16 @@ var h :any;
 
 var vel:any;
 var rev:any;
+var x: any;
 
 // Just get data is there is new message
 serverdb.on("message", function (msg : any) {
 
     coord = msg.toString('utf8');
     
-    var key=coord.slice(53,60);
+    var key=coord.slice(46,54);
 
-    if (key=="DBJ12345" || key=="DBJ12346" ){
+    if (key=="DBJ12364"){
 
     
         console.log(coord);
@@ -37,18 +38,13 @@ serverdb.on("message", function (msg : any) {
         
         h=coord.slice(11,16);
 
-        vel=coord.slice(41,42)+"."+coord.slice(43,44);
-        rev=coord.slice(45,48);
+       
         
         // Days
         var n = coord[10];
+      
+        var now = new Date('January 6, 1980 00:00:00 GMT+5:00');
         
-        if (key=="DBJ12346"){
-            var now = new Date('January 6, 1980 00:00:00 GMT+0:00');
-        }
-        else{
-            var now = new Date('January 6, 1980 00:00:00 GMT+5:00');
-        }
         
         
         //Year
@@ -65,46 +61,75 @@ serverdb.on("message", function (msg : any) {
 
         // The last day of the week change if its over wednesday 12:00
         // To the lastweek day variable remove 7 days
-        if (key == "DBJ12345"){
-            if (n>=3 && h>43200){//43200
-                ld=ld-7;    
-            }
-    
-            if (n>=4){
-                ld=ld-7;    
-            }
+        
+        if (n>=3 && h>43200){//43200
+            ld=ld-7;    
+        }
+
+        if (n>=4){
+            ld=ld-7;    
         }
         
-        if (key == "DBJ12346"){
-            ld=ld-7;
-        }
+        
+        
         
         // If its less than 5:00 to the reference hour then keep day as the 
         // addition of lastweek day plus the number given by the syrus
 
-        if (key=="DBJ12345"){
-            if (h<18000){
-                var day: number= ld+n;
-            }
-            else{
-                // If not add 1 day to because it's already the next day
-                var day: number= ld+n+1;
-            }
+        
+        if (h<18000){
+            var day: number= ld+n;
         }
         else{
+            // If not add 1 day to because it's already the next day
             var day: number= ld+n+1;
-        };
+        }
         
+  
         
         // Set the day number to Date
         now.setDate(day);
 
         // Convert of time format
-        var x = now.toISOString().slice(0, 19).replace('T', ' ');;
+        x = now.toISOString().slice(0, 19).replace('T', ' ');;
 
         // Convert data from string to Float
         lat=parseFloat(lat);
         lon=parseFloat(lon);
+
+        // Json 
+        coord = {
+            latitud: lat,
+            longitud: lon,
+            fecha: x
+        }
+        console.log(coord);
+        pool.query('INSERT INTO coord2 set ?',coord);
+
+    }
+
+    // Second Car
+
+    if (key=="DBJ12346" ){
+
+    
+        console.log(coord);
+    
+       
+        lat=coord.slice(24,33);
+
+        lon=coord.slice(33,41);
+    
+        vel=coord.slice(58,61);
+        rev=coord.slice(54,58);
+        
+        x = coord.slice(5,24);
+
+        // Convert data from string to Float
+        lat=parseFloat(lat);
+        lon=parseFloat(lon);
+        vel=parseFloat(vel);
+        rev=parseFloat(rev);
 
         // Json 
         coord = {
