@@ -89,6 +89,7 @@ export class MapComponent implements OnInit,DoCheck {
       if (this.markerstatus == true){
       this.marker2.setPosition({lat: Number(this.dates.carro1[this.value].latitud), lng: Number(this.dates.carro1[this.value].longitud)});
       //second marker position
+      if(this.dates.carro2.length!=0){
       this.marker4.setPosition({lat: Number(this.dates.carro2[this.value2].latitud), lng: Number(this.dates.carro2[this.value2].longitud)});
       
       this.coord={
@@ -100,8 +101,20 @@ export class MapComponent implements OnInit,DoCheck {
         latitud:this.dates.carro2[this.value2].latitud,
         longitud:this.dates.carro2[this.value2].longitud,
         fecha:this.dates.carro2[this.value2].fecha}],
-      };
-    
+       };
+      }
+      else{
+        this.coord={
+          carro1:[{
+          latitud:this.dates.carro1[this.value].latitud,
+          longitud:this.dates.carro1[this.value].longitud,
+          fecha:this.dates.carro1[this.value].fecha}],
+          carro2:[{
+          latitud:"11.01807",
+          longitud:"-74.85167",
+          fecha:""}],
+         };
+      }
       if (this.map.getBounds().contains(this.marker2.getPosition())==false){
         this.map.setCenter({lat: Number(this.dates.carro1[this.value].latitud), lng: Number(this.dates.carro1[this.value].longitud)});
       }
@@ -159,7 +172,7 @@ export class MapComponent implements OnInit,DoCheck {
 
     this.poly2 = new google.maps.Polyline({
       path: this.flightPlan2,
-      strokeColor: '#39bed6',
+      strokeColor: '#510dce',
       strokeOpacity: 1.0,
       strokeWeight: 3
     });
@@ -318,6 +331,7 @@ export class MapComponent implements OnInit,DoCheck {
 
                 if (this.hist.carro2.length == 0){
                   this.slider2=0;
+                 
                 }
                 else{
                 this.slider2=this.dates.carro2.length-1;
@@ -327,12 +341,27 @@ export class MapComponent implements OnInit,DoCheck {
 
                 this.options={
                   floor: 0,
-                  ceil: this.slider
+                  ceil: this.slider,
+                  getPointerColor: (value: number): string => {
+                    if (value >= 0) {
+                        return 'black';
+                    }
+                   
+                    return '#2AE02A';
+                }
                 };
-
+                
                 this.options2={
                   floor: 0,
-                  ceil: this.slider2
+                  ceil: this.slider2,
+                  getPointerColor: (value: number): string => {
+                    if (value >= 0) {
+                        return '#510dce';
+                    }
+                   
+                    return '#2AE02A';
+                }
+                  
 
                 };
 

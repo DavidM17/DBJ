@@ -75,7 +75,7 @@ padding-bottom: 20px;
 }
 
 .vl {
-    border-left: 3px solid lightseagreen;
+    /* border-left: 3px solid lightseagreen; */
     height: 30px;
     margin-left: 30px;
   }
@@ -85,4 +85,16 @@ padding-bottom: 20px;
 }
 .second{
     margin-left: 460px;
+}
+.color1{
+    margin-top: 2px;
+    height: 20px;
+    width: 20px;
+    background: black;
+}
+.color2{
+    margin-top: 2px;
+    height: 20px;
+    width: 20px;
+    background:rgb(81, 13, 206);
 }
